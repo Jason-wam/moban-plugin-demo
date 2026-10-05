@@ -45,7 +45,7 @@ gradlew packagePlugin
 **核心答案：逻辑调试完全不需要宿主 App。** 契约层是纯 JVM 接口，插件代码是纯 Kotlin，
 本仓库提供了 `FakePluginHost`，三个层次由轻到重：
 
-### ① JVM 单元测试（首选，秒级循环）
+### ① JVM 单元测试（首选，秒级循环，可直接联网）
 
 `src/test/kotlin/.../DemoBookSourceTest.kt` 演示了搜索 → 详情 → 目录 → 正文全链路测试：
 
@@ -54,8 +54,24 @@ gradlew test          # 命令行运行
 ```
 
 在 Android Studio / IntelliJ 里直接 **Debug 运行测试类**，可在插件源码任意行打断点、
-看变量、单步执行。真实站点开发时，把 `FakeHttp` 改成读取本地保存的 HTML/JSON 样本，
-解析逻辑即可离线调试，不必反复请求站点。
+看变量、单步执行。
+
+**测试宿主默认真实联网**：`FakePluginHost()` 的 http 实现为 [JvmHttp]
+（JDK 自带 HttpClient，支持 GET/POST、自定义头/请求体/编码/超时），直接请求真实站点即可
+断点调试解析逻辑，**不需要先离线保存网页源码**：
+
+```kotlin
+// 开发自己的真实站点插件时，JVM 测试里这样写：
+private val source = MyBookSourcePlugin().createSources(FakePluginHost()).first()
+@Test fun `解析真实站点`() = runBlocking {
+    val books = source.search(SearchQuery(keyword = "关键词")).getOrThrow()  // 真实请求
+    // ...断言解析结果
+}
+```
+
+`JvmHttp` 与宿主 `PluginHttpFacade` 的差异：无 Cookie 持久化、无 HappyDNS、无 SSL 降级。
+站点反爬强导致 JVM 直连失败时，切换离线样本模式：`FakePluginHost(http = FakeHttp)` 并让
+`FakeHttp.text` 读取本地保存的 HTML/JSON 样本（确定性回放）；需要完整宿主链路时用真机调试（②③）。
 
 ### ② 设备快速循环：adb push + logcat
 
