@@ -19,7 +19,6 @@ class DemoBookSource(private val host: PluginHost) : RemoteBookSource {
 
     override val id: String = "demo.apk.source.local"
     override val name: String = "演示APK书源"
-    override val group: String = "演示"
 
     // ---------------- 搜索 ----------------
 

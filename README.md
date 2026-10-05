@@ -11,7 +11,7 @@ class 与 dex 打包为普通 APK——但**不安装到系统**，由宿主以�
 
 ```bash
 gradlew packagePlugin
-# 产物：build/dist/demo-apk-plugin.apk（release 未签名 APK，宿主加载不校验签名）
+# 产物：build/dist/moban-plugin-demo.apk（release 未签名 APK，宿主加载不校验签名）
 ```
 
 ## 导入宿主
@@ -79,7 +79,7 @@ private val source = MyBookSourcePlugin().createSources(FakePluginHost()).first(
 
 ```bash
 gradlew packagePlugin
-adb push build/dist/demo-apk-plugin.apk /data/local/tmp/demo.apk
+adb push build/dist/moban-plugin-demo.apk /data/local/tmp/demo.apk
 adb shell run-as com.jason.any.reader cp /data/local/tmp/demo.apk files/book-plugins/
 adb logcat | grep -i "DemoApkBookSource\|PluginManager"
 ```

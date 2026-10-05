@@ -70,7 +70,7 @@ tasks.register<Copy>("packagePlugin") {
     group = "reader-plugin"
     description = "导出可导入宿主的标准 APK 插件"
     dependsOn("assembleRelease")
-    from(layout.buildDirectory.file("outputs/apk/release/demo-apk-plugin-release-unsigned.apk"))
+    from(layout.buildDirectory.file("outputs/apk/release/moban-plugin-demo-release-unsigned.apk"))
     into(layout.buildDirectory.dir("dist"))
-    rename { "demo-apk-plugin.apk" }
+    rename { "moban-plugin-demo.apk" }
 }

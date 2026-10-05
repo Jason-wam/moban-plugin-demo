@@ -24,4 +24,4 @@ dependencyResolutionManagement {
 // includeBuild("../../modules/book-api")
 // 并把 build.gradle.kts 里的 jitpack 坐标换回 com.jason.reader:book-api:0.1.0
 
-rootProject.name = "demo-apk-plugin"
+rootProject.name = "moban-plugin-demo"
