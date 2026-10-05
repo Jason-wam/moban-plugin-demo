@@ -37,12 +37,19 @@ dependencies {
     // settings 里启用 mavenLocal() 并换回 com.jason.reader:book-api:0.1.0
     // 需要直接用宿主网络封装（OkHttpManager 等）时启用（同样走 jitpack/私有源）：
     // compileOnly("com.github.Jason-wam:network:v0.1.0")
+
+    // ── 仅测试期使用：JVM 单元测试让你不装宿主、不连设备即可调试插件逻辑 ──
+    // 注：compileOnly 不进测试类路径，测试源集需单独声明（不会被打进 APK）
+    testImplementation("com.github.Jason-wam:book-api:v0.1.0")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:2.4.20")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.4.20")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 }
 
 // KGP 会自动把 kotlin-stdlib 加为 implementation 并打进 APK；宿主进程里 stdlib
 // 永远由宿主 ClassLoader 提供（parent-first），内嵌副本只会白白增大插件体积。
-// 从各变体的 RuntimeClasspath 排除（编译类路径不受影响），保持插件 APK 最小化。
-configurations.matching { it.name.endsWith("RuntimeClasspath") }.configureEach {
+// 只从 APK 打包用的变体运行时类路径排除（编译与单元测试不受影响），保持插件最小化。
+configurations.matching { it.name.matches(Regex("(debug|release)RuntimeClasspath")) }.configureEach {
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib")
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk7")
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
