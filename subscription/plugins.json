@@ -1,0 +1,15 @@
+{
+  "name": "墨伴示例插件仓库",
+  "comment": "插件包订阅示例：仓库 JSON 只提供插件清单并在启动时检查版本，不会自动下载；安装与更新需用户手动确认。",
+  "plugins": [
+    {
+      "id": "com.jason.reader.plugin.demo",
+      "name": "演示APK书源",
+      "version": "1.0.0",
+      "author": "墨伴",
+      "description": "最小化标准 APK 插件示例，演示搜索/目录/正文全链路。",
+      "minApiVersion": 1,
+      "url": "https://github.com/Jason-wam/moban-plugin-demo/releases/latest/download/moban-plugin-demo.apk"
+    }
+  ]
+}

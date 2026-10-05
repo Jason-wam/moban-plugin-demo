@@ -20,6 +20,30 @@ gradlew packagePlugin
 2. 或放进 `filesDir/book-plugins/`（`adb push` 后启动时自动扫描入库）；
 3. 导入后插件图标显示为橙色书本，书源「演示APK书源」出现在发现页，可搜索/看正文。
 
+## 插件包订阅（仓库 JSON）
+
+除了直接导入单个 APK，还可以让用户**订阅一个插件仓库**：仓库是一个 JSON，列出插件清单与下载地址；App 启动时只检查版本、不会自动下载，安装 / 更新由用户手动确认。
+
+本仓库提供示例 `subscription/plugins.json`，订阅地址（文件原始 URL）：
+
+```
+https://raw.githubusercontent.com/Jason-wam/moban-plugin-demo/main/subscription/plugins.json
+```
+
+仓库 JSON 字段：
+
+| 字段 | 说明 |
+|---|---|
+| `name` / `comment` / `icon` | 仓库名 / 简介 / 图标（位图直链，可选） |
+| `plugins[]` | 插件清单（至少一条） |
+| `plugins[].id` | 与插件 `assets/plugin.json` 的 `id` 一致 |
+| `plugins[].name` / `version` / `author` / `description` | 展示信息 |
+| `plugins[].versionCode` | 整数版本号，更新对比优先用它；缺省（0）退化为 `version` 字符串比较 |
+| `plugins[].minApiVersion` | 兼容的最低宿主契约版本 |
+| `plugins[].url` | 插件包（.jar/.apk）下载直链 |
+
+> 示例下载地址用了 GitHub Release 的固定重定向 `releases/latest/download/moban-plugin-demo.apk`。要让它真正可装：构建后把 `build/dist/moban-plugin-demo.apk` 作为 Release 资产上传（资产名保持 `moban-plugin-demo.apk`）；发新版时更新 Release 与清单里的 `version` / `versionCode`，订阅即可检测到更新。
+
 ## plugin.json 字段（assets/plugin.json）
 
 | 字段 | 说明 |
