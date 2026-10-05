@@ -60,8 +60,7 @@ configurations.matching { it.name.matches(Regex("(debug|release)RuntimeClasspath
  * packagePlugin：把 release APK 复制为稳定的插件文件名，推入宿主
  * filesDir/book-plugins/ 即可。
  *
- * 与容器式 APK（sample 工程的 buildPluginApk，纯 zip 合成、无 manifest）不同，
- * 本任务是**标准 APK**：带 AndroidManifest.xml 与资源表，宿主导入时
+ * 本任务产出**标准 APK**：带 AndroidManifest.xml 与资源表，宿主导入时
  * 图标优先取 manifest 的 android:icon；plugin.json 按约定放在 assets/ 下。
  * 注意：宿主按「免安装容器」加载，不校验签名，故 release 未签名 APK 可直接使用；
  * 若后续需要签名信任链，自行配置 signingConfigs 即可。

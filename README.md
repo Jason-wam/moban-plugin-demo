@@ -4,8 +4,7 @@
 与资源表（插件图标来自 manifest 的 `android:icon`），插件描述符放在 `assets/plugin.json`，
 class 与 dex 打包为普通 APK——但**不安装到系统**，由宿主以「免安装容器」方式加载。
 
-与之相对的「容器式 APK」（自合成 zip，无 manifest）见墨伴主仓库
-`plugins/sample-book-source` 的 `buildPluginApk` 任务，两者宿主均支持。
+宿主同时支持 `.jar`（含 classes.dex 的 dex-jar）与 `.apk` 两种插件包，本仓库演示的是标准 APK 形态。
 
 ## 构建
 
