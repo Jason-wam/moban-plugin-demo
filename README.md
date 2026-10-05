@@ -1,10 +1,10 @@
-# anyreader-plugin-demo · 最小化标准 APK 书源插件
+# moban-plugin-demo · 最小化标准 APK 书源插件
 
-[AnyReader](https://github.com/Jason-wam) 的**标准 APK 形态**书源插件示例：带 AndroidManifest
+[墨伴](https://github.com/Jason-wam) 的**标准 APK 形态**书源插件示例：带 AndroidManifest
 与资源表（插件图标来自 manifest 的 `android:icon`），插件描述符放在 `assets/plugin.json`，
 class 与 dex 打包为普通 APK——但**不安装到系统**，由宿主以「免安装容器」方式加载。
 
-与之相对的「容器式 APK」（自合成 zip，无 manifest）见 AnyReader 主仓库
+与之相对的「容器式 APK」（自合成 zip，无 manifest）见墨伴主仓库
 `plugins/sample-book-source` 的 `buildPluginApk` 任务，两者宿主均支持。
 
 ## 构建
@@ -16,7 +16,7 @@ gradlew packagePlugin
 
 ## 导入宿主
 
-1. 打开 AnyReader → 书源管理页 → **插件包** → 「导入插件（jar/apk）」选择本 APK；
+1. 打开墨伴 → 书源管理页 → **插件包** → 「导入插件（jar/apk）」选择本 APK；
 2. 或放进 `filesDir/book-plugins/`（`adb push` 后启动时自动扫描入库）；
 3. 导入后插件图标显示为橙色书本，书源「演示APK书源」出现在发现页，可搜索/看正文。
 

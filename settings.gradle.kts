@@ -20,7 +20,7 @@ dependencyResolutionManagement {
 // 契约层 book-api：通过 JitPack 坐标引用（compileOnly，APK 内不含其字节码，
 // 运行时由宿主 ClassLoader 提供）。无需携带宿主源码即可独立构建。
 //
-// 如需切回「源码复合构建」（例如在 AnyReader 宿主仓库内做联调），改回：
+// 如需切回「源码复合构建」（例如在墨伴宿主仓库内做联调），改回：
 // includeBuild("../../modules/book-api")
 // 并把 build.gradle.kts 里的 jitpack 坐标换回 com.jason.reader:book-api:0.1.0
 

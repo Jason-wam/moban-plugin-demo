@@ -20,7 +20,7 @@ class DemoBookSourcePlugin : BookSourcePlugin {
         name = "演示APK书源",
         version = "1.0.0",
         minApiVersion = 1,
-        author = "AnyReader",
+        author = "墨伴",
         description = "最小化标准 APK 插件示例，演示搜索/目录/正文全链路。",
     )
 

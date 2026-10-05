@@ -93,7 +93,7 @@ class DemoBookSource(private val host: PluginHost) : RemoteBookSource {
         val DEMO_BOOKS = listOf(
             SearchBook(
                 name = "APK插件入门",
-                author = "AnyReader",
+                author = "墨伴",
                 intro = "演示标准 APK 插件形态：manifest 图标 + assets 描述符。",
                 latestChapter = "第 12 章 示例标题",
                 detailUrl = "https://demo.apk.local/book/2001",

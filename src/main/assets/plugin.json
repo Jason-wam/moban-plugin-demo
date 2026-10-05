@@ -4,6 +4,6 @@
   "version": "1.0.0",
   "entryClass": "com.jason.reader.plugin.demo.DemoBookSourcePlugin",
   "minApiVersion": 1,
-  "author": "AnyReader",
+  "author": "墨伴",
   "description": "最小化标准 APK 插件示例：manifest 图标 + assets/plugin.json，搜索/目录/正文全链路演示数据。"
 }
