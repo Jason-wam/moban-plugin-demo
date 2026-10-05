@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 仅作 dex / 图标 / 资产容器，不安装到系统；icon 供宿主导入时提取为插件图标 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:icon="@drawable/ic_plugin"
+        android:label="演示APK书源插件" />
+
+</manifest>
