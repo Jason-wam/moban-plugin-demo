@@ -103,9 +103,18 @@ private val source = MyBookSourcePlugin().createSources(FakePluginHost()).first(
 ```bash
 gradlew packagePlugin
 adb push build/dist/moban-plugin-demo.apk /data/local/tmp/demo.apk
-adb shell run-as com.jason.any.reader cp /data/local/tmp/demo.apk files/book-plugins/
+adb shell run-as com.jason.any.reader mkdir -p files/book-plugins
+adb shell run-as com.jason.any.reader cp /data/local/tmp/demo.apk files/book-plugins/demo.apk
 adb logcat | grep -i "DemoApkBookSource\|PluginManager"
 ```
+
+> 注意事项：
+> 1. Android toybox 的 `cp` 不支持把文件直接拷到目录（会报 `Is a directory`），
+>    目标必须写成完整文件名 `files/book-plugins/demo.apk`；`mkdir -p` 确保目录已存在。
+> 2. **必须放进内部存储**（`run-as` 下的 `files/book-plugins/`，即
+>    `/data/data/com.jason.any.reader/files/book-plugins/`）。Android 10+ 禁止
+>    `DexClassLoader` 从外部存储（`/storage/emulated/0/...`）加载 DEX，会抛
+>    `SecurityException: Writable dex file ... is not allowed`。
 
 重启 App（或重新导入）触发 `scanDirectory + loadAll`；插件里用 `host.log(tag, msg)`
 打的日志会进 logcat，是运行期的"println 调试"通道。
@@ -125,5 +134,6 @@ Evaluate/Watch 检查插件对象；或在插件源码上先打断点（IDE 提�
 |---|---|
 | 导入后书源不出现 | `plugin.json` 路径/`entryClass` 拼写错误；入口类缺无参构造 |
 | `ClassCastException` / 单例分裂 | 契约层被打进了插件（必须 `compileOnly`） |
+| `SecurityException: Writable dex file` | 插件放在了外部存储；必须用 `run-as` 放进内部 `files/book-plugins/` |
 | 加载即崩、AbstractMethodError | 插件 `minApiVersion` 高于宿主，或宿主与插件 book-api 版本不匹配 |
 | 网络行为与预期不符 | 插件自建了网络栈；统一改走 `host.http` 共享 Cookie/缓存 |

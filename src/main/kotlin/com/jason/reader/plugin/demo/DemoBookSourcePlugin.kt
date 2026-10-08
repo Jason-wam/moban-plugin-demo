@@ -17,7 +17,7 @@ class DemoBookSourcePlugin : BookSourcePlugin {
 
     override val metadata: PluginMetadata = PluginMetadata(
         id = "com.jason.reader.plugin.demo",
-        name = "演示APK书源",
+        name = "演示APK插件包",
         version = "1.0.0",
         minApiVersion = 1,
         author = "墨伴",

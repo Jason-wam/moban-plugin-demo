@@ -40,7 +40,7 @@ class DemoBookSource(private val host: PluginHost) : RemoteBookSource {
     )
 
     override suspend fun explore(slot: ExploreSlot, page: Int): Result<List<SearchBook>> =
-        runCatching { if (page > 2) emptyList() else DEMO_BOOKS }
+        runCatching { if (page > 1) emptyList() else DEMO_BOOKS }
 
     // ---------------- 详情 ----------------
 
