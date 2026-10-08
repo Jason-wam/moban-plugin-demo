@@ -17,13 +17,10 @@ android {
 
     defaultConfig {
         // 本 APK 仅作为「免安装插件容器」被宿主加载，不会真正安装到系统；
-        // applicationId 仅为满足打包要求。
+        // applicationId 仅为满足打包要求，同时决定 manifest packageName，
+        // 进而决定约定入口类 = <packageName>.BookSourcePlugin。
         applicationId = "com.jason.reader.plugin.demo"
         minSdk = 24
-        // 插件版本：versionName/versionCode 会被自动写入 plugin.json，
-        // 与宿主插件管理页展示的版本一致。
-        versionCode = 1
-        versionName = "1.0.0"
     }
 
     compileOptions {
