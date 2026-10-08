@@ -79,52 +79,8 @@ tasks.register<Copy>("packagePlugin") {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 自动生成 assets/plugin.json：作者无需手动维护 json，只需配置下方 pluginMeta。
-// versionName / versionCode 从 android.defaultConfig 自动同步。
-// entryClass 约定为「<namespace>.BookSourcePlugin」；若你的入口类不叫这个名字，
-// 在 pluginMeta 里显式指定 entryClass 即可。
+// 插件元数据（id/name/version/minApiVersion/author/description）全部在
+// BookSourcePlugin.metadata 里配置一次，宿主加载后自动回写数据库。
+// 入口类约定为「<namespace>.BookSourcePlugin」，无需 plugin.json；
+// 若需自定义入口类名，在包内放 plugin.json 指定 entryClass 即可覆盖约定。
 // ─────────────────────────────────────────────────────────────────────────────
-
-val pluginMeta = mapOf(
-    "id" to "com.jason.reader.plugin.demo",
-    "name" to "演示APK插件包",
-    // 不填则自动推断为 "${android.namespace}.BookSourcePlugin"
-    "entryClass" to "com.jason.reader.plugin.demo.DemoBookSourcePlugin",
-    "minApiVersion" to 1,
-    "author" to "墨伴",
-    "description" to "最小化标准 APK 插件示例：manifest 图标 + 自动生成 plugin.json，搜索/目录/正文全链路演示数据。",
-)
-
-val generatePluginJson by tasks.registering {
-    group = "reader-plugin"
-    description = "自动生成 assets/plugin.json（从 build.gradle.kts 配置同步）"
-    val outputFile = layout.projectDirectory.file("src/main/assets/plugin.json")
-    outputs.file(outputFile)
-    doLast {
-        outputFile.asFile.parentFile?.mkdirs()
-        val ns = android.namespace
-        val entry = pluginMeta["entryClass"]?.toString()
-            ?: "$ns.BookSourcePlugin"
-        val versionName = android.defaultConfig.versionName ?: "0.0.0"
-        val versionCode = android.defaultConfig.versionCode ?: 0
-        val minApi = pluginMeta["minApiVersion"]?.toString()?.toIntOrNull() ?: 1
-        val json = """
-            {
-              "id": "${pluginMeta["id"]}",
-              "name": "${pluginMeta["name"]}",
-              "version": "$versionName",
-              "versionCode": $versionCode,
-              "entryClass": "$entry",
-              "minApiVersion": $minApi,
-              "author": "${pluginMeta["author"] ?: ""}",
-              "description": "${pluginMeta["description"] ?: ""}"
-            }
-        """.trimIndent()
-        outputFile.asFile.writeText(json)
-    }
-}
-
-// preBuild 依赖生成任务，确保每次构建前 plugin.json 都是最新的
-tasks.named("preBuild") {
-    dependsOn(generatePluginJson)
-}

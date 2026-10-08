@@ -43,28 +43,35 @@ https://raw.githubusercontent.com/Jason-wam/moban-plugin-demo/main/subscription/
 
 > 示例下载地址用了 GitHub Release 的固定重定向 `releases/latest/download/moban-plugin-demo.apk`。要让它真正可装：构建后把 `build/dist/moban-plugin-demo.apk` 作为 Release 资产上传（资产名保持 `moban-plugin-demo.apk`）；发新版时更新 Release 与清单里的 `version` / `versionCode`，订阅即可检测到更新。
 
-## plugin.json 字段（assets/plugin.json，自动生成）
+## 插件元数据（无需 plugin.json）
 
-> `assets/plugin.json` 由 `build.gradle.kts` 的 `generatePluginJson` 任务在构建时
-> 自动生成（已加入 `.gitignore`），作者**无需手动维护**。只需在 `build.gradle.kts`
-> 顶部的 `pluginMeta` map 里配置字段，`version` / `versionCode` 自动从
-> `android.defaultConfig` 同步。
+> 插件元数据（id/name/version/minApiVersion/author/description）**只在代码里配置一次**
+> ——入口类的 `BookSourcePlugin.metadata`。宿主加载后自动回写数据库，无需在
+> `plugin.json` 或 `build.gradle.kts` 重复维护，杜绝不一致。
 
-| 字段 | 说明 | pluginMeta 配置 |
+| 字段 | 说明 | 配置位置 |
 |---|---|---|
-| `id` | 插件唯一 id（包名风格，与 `PluginMetadata.id` 一致） | `"id"` |
-| `name` / `author` / `description` | 展示信息 | `"name"` / `"author"` / `"description"` |
-| `version` / `versionCode` | 版本号（自动同步） | `android.defaultConfig.versionName` / `versionCode` |
-| `entryClass` | 插件入口类 FQN，必须有无参构造；不填则自动推断为 `<namespace>.BookSourcePlugin` | `"entryClass"`（可选） |
-| `minApiVersion` | 兼容的最低宿主契约版本（book-api `API_VERSION`） | `"minApiVersion"` |
+| `id` | 插件唯一 id（包名风格） | `metadata.id` |
+| `name` / `author` / `description` | 展示信息 | `metadata.name` / `author` / `description` |
+| `version` | 版本号（仅展示） | `metadata.version` |
+| `minApiVersion` | 兼容的最低宿主契约版本（book-api `API_VERSION`） | `metadata.minApiVersion` |
+| `entryClass` | 入口类 FQN（默认约定 `<packageName>.BookSourcePlugin`，无需声明） | 可选 `plugin.json` 覆盖 |
+
+**入口类约定**：宿主从 APK manifest 读取 `packageName`，约定入口类为
+`<packageName>.BookSourcePlugin`。若你的入口类不叫这个名字，可在包内放
+`plugin.json`（根目录或 `assets/`）指定 `entryClass` 覆盖约定，例如：
+```json
+{ "entryClass": "com.example.my.plugin.MyEntry" }
+```
 
 ## 开发自己的插件
 
 1. 参考本仓库：`settings.gradle.kts` 引入契约层（JitPack 坐标），`compileOnly` 依赖；
-2. 实现 `BookSourcePlugin`（入口）+ `RemoteBookSource`（书源，方法全 suspend，
-   失败返回 `Result.failure(SourceException.Xxx)`）；能力一律走 `host.http` / `host.cacheDir`；
-3. 在 `build.gradle.kts` 顶部的 `pluginMeta` map 配置 `id` / `name` 等元数据，
-   `assets/plugin.json` 会在构建时自动生成；`AndroidManifest.xml` 配 `android:icon`；
+2. 实现 `BookSourcePlugin`（入口类，命名为 `BookSourcePlugin` 以遵循约定）+
+   `RemoteBookSource`（书源，方法全 suspend，失败返回 `Result.failure(SourceException.Xxx)`）；
+   能力一律走 `host.http` / `host.cacheDir`；
+3. 在 `metadata` 里配置 id/name/version 等元数据（唯一配置源）；
+   `AndroidManifest.xml` 配 `android:icon`；
 4. AGP 9 注意：内置 Kotlin 读不了宿主 Kotlin 2.4 元数据，本仓库用 buildscript classpath
    注入 KGP 2.4.20（见 `build.gradle.kts`）；stdlib 已从 APK 运行时排除保持体积最小。
 
@@ -139,7 +146,7 @@ Evaluate/Watch 检查插件对象；或在插件源码上先打断点（IDE 提�
 
 | 现象 | 原因 |
 |---|---|
-| 导入后书源不出现 | `plugin.json` 路径/`entryClass` 拼写错误；入口类缺无参构造 |
+| 导入后书源不出现 | 入口类未命名为 `BookSourcePlugin` 且未在 `plugin.json` 指定 `entryClass`；或入口类缺无参构造 |
 | `ClassCastException` / 单例分裂 | 契约层被打进了插件（必须 `compileOnly`） |
 | `SecurityException: Writable dex file` | 插件放在了外部存储；必须用 `run-as` 放进内部 `files/book-plugins/` |
 | 加载即崩、AbstractMethodError | 插件 `minApiVersion` 高于宿主，或宿主与插件 book-api 版本不匹配 |
