@@ -32,7 +32,7 @@ dependencies {
     // 契约层只编译期可见；严禁改为 implementation，否则宿主/插件各加载一份
     // 同名接口，类型转换失败（ClassCastException / 单例分裂）。
     // 契约层由 JitPack 提供（Jason-wam/book-api 仓库，tag 决定版本）。
-    compileOnly("com.github.Jason-wam:book-api:v0.1.0")
+    compileOnly("com.github.Jason-wam:book-api:v0.1.1")
     // 本地联调替代方案（已实测可编译）：book-api 执行 publishToMavenLocal，
     // settings 里启用 mavenLocal() 并换回 com.jason.reader:book-api:0.1.0
     // 需要直接用宿主网络封装（OkHttpManager 等）时启用（同样走 jitpack/私有源）：
@@ -40,7 +40,7 @@ dependencies {
 
     // ── 仅测试期使用：JVM 单元测试让你不装宿主、不连设备即可调试插件逻辑 ──
     // 注：compileOnly 不进测试类路径，测试源集需单独声明（不会被打进 APK）
-    testImplementation("com.github.Jason-wam:book-api:v0.1.0")
+    testImplementation("com.github.Jason-wam:book-api:v0.1.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.4.20")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.4.20")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
