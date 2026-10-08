@@ -7,3 +7,5 @@ local.properties
 .idea/workspace.xml
 .idea/navEditor.xml
 .idea/assetWizardSettings.xml
+# 由 build.gradle.kts 的 generatePluginJson 任务自动生成
+src/main/assets/plugin.json

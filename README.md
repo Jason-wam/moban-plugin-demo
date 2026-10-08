@@ -43,21 +43,28 @@ https://raw.githubusercontent.com/Jason-wam/moban-plugin-demo/main/subscription/
 
 > 示例下载地址用了 GitHub Release 的固定重定向 `releases/latest/download/moban-plugin-demo.apk`。要让它真正可装：构建后把 `build/dist/moban-plugin-demo.apk` 作为 Release 资产上传（资产名保持 `moban-plugin-demo.apk`）；发新版时更新 Release 与清单里的 `version` / `versionCode`，订阅即可检测到更新。
 
-## plugin.json 字段（assets/plugin.json）
+## plugin.json 字段（assets/plugin.json，自动生成）
 
-| 字段 | 说明 |
-|---|---|
-| `id` | 插件唯一 id（包名风格，与 `PluginMetadata.id` 一致） |
-| `name` / `version` / `author` / `description` | 展示信息 |
-| `entryClass` | 插件入口类 FQN，必须有无参构造 |
-| `minApiVersion` | 兼容的最低宿主契约版本（book-api `API_VERSION`） |
+> `assets/plugin.json` 由 `build.gradle.kts` 的 `generatePluginJson` 任务在构建时
+> 自动生成（已加入 `.gitignore`），作者**无需手动维护**。只需在 `build.gradle.kts`
+> 顶部的 `pluginMeta` map 里配置字段，`version` / `versionCode` 自动从
+> `android.defaultConfig` 同步。
+
+| 字段 | 说明 | pluginMeta 配置 |
+|---|---|---|
+| `id` | 插件唯一 id（包名风格，与 `PluginMetadata.id` 一致） | `"id"` |
+| `name` / `author` / `description` | 展示信息 | `"name"` / `"author"` / `"description"` |
+| `version` / `versionCode` | 版本号（自动同步） | `android.defaultConfig.versionName` / `versionCode` |
+| `entryClass` | 插件入口类 FQN，必须有无参构造；不填则自动推断为 `<namespace>.BookSourcePlugin` | `"entryClass"`（可选） |
+| `minApiVersion` | 兼容的最低宿主契约版本（book-api `API_VERSION`） | `"minApiVersion"` |
 
 ## 开发自己的插件
 
 1. 参考本仓库：`settings.gradle.kts` 引入契约层（JitPack 坐标），`compileOnly` 依赖；
 2. 实现 `BookSourcePlugin`（入口）+ `RemoteBookSource`（书源，方法全 suspend，
    失败返回 `Result.failure(SourceException.Xxx)`）；能力一律走 `host.http` / `host.cacheDir`；
-3. `assets/plugin.json` 写好元数据，`AndroidManifest.xml` 配 `android:icon`；
+3. 在 `build.gradle.kts` 顶部的 `pluginMeta` map 配置 `id` / `name` 等元数据，
+   `assets/plugin.json` 会在构建时自动生成；`AndroidManifest.xml` 配 `android:icon`；
 4. AGP 9 注意：内置 Kotlin 读不了宿主 Kotlin 2.4 元数据，本仓库用 buildscript classpath
    注入 KGP 2.4.20（见 `build.gradle.kts`）；stdlib 已从 APK 运行时排除保持体积最小。
 
