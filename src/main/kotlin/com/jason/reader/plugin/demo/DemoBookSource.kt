@@ -95,6 +95,8 @@ class DemoBookSource(private val host: PluginHost) : RemoteBookSource {
                 author = "墨伴",
                 intro = "演示标准 APK 插件形态：manifest 图标 + assets 描述符。",
                 latestChapter = "第 12 章 示例标题",
+                updateStatus = "连载中",
+                updateDate = "2026-10-01",
                 detailUrl = "https://demo.apk.local/book/2001",
             ),
             SearchBook(
@@ -102,6 +104,8 @@ class DemoBookSource(private val host: PluginHost) : RemoteBookSource {
                 author = "示例作者",
                 intro = "演示数据之二，用于验证多本书籍与关键词过滤。",
                 latestChapter = "第 12 章 示例标题",
+                updateStatus = "已完结",
+                updateDate = "2026-09-15",
                 detailUrl = "https://demo.apk.local/book/2002",
             ),
         )
