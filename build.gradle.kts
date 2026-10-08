@@ -79,5 +79,5 @@ tasks.register<Copy>("packagePlugin") {
 // 插件元数据（id/name/version/minApiVersion/author/description）全部在
 // BookSourcePlugin.metadata 里配置一次，宿主加载后自动回写数据库。
 // 入口类约定为「<namespace>.BookSourcePlugin」，无需 plugin.json；
-// 若需自定义入口类名，在包内放 plugin.json 指定 entryClass 即可覆盖约定。
+// 若需自定义入口类名，在包内放 assets/plugin.json 指定 entryClass 即可覆盖约定。
 // ─────────────────────────────────────────────────────────────────────────────
